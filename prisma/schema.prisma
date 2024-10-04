@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Freelancer {
+  id       String  @id
+  name     String
+  email    String  @unique
+  imageUrl String? @map("image_url")
+
+  submissions Submission[]
+  works       Work[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("freelancers")
+}
+
+model Recruter {
+  id       String  @id
+  name     String
+  email    String  @unique
+  imageUrl String? @map("image_url")
+
+  works Work[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("recruters")
+}
+
+model Work {
+  id            String     @id
+  title         String
+  description   String
+  deliveryTime  DateTime?  @map("delivery_time")
+  amountCharged Float      @map("amount_charged")
+  status        WorkStatus
+
+  recruterId   String       @map("owner_id")
+  freelancerId String?      @map("freelancer_id")
+  submissions  Submission[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  recruter   Recruter    @relation(fields: [recruterId], references: [id], onDelete: Cascade)
+  freelancer Freelancer? @relation(fields: [freelancerId], references: [id], onDelete: Cascade)
+
+  @@map("works")
+}
+
+model Submission {
+  id           String @id
+  freelancerId String @map("freelancer_id")
+  workId       String @map("work_id")
+
+  body          String
+  portfolioLink String?  @map("portfolio_link")
+  linkedinLink  String?  @map("linkedin_link")
+  deliveryTime  DateTime @map("delivery_time")
+  amountCharged Float    @map("amount_charged")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  freelancer Freelancer @relation(fields: [freelancerId], references: [id], onDelete: Cascade)
+  work       Work       @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@map("submissions")
+}
+
+enum WorkStatus {
+  OPEN
+  CLOSED
+  FINISHED
+}
