@@ -18,6 +18,16 @@ export class InMemoryRecrutersRepository implements RecrutersRepository {
     return recruter;
   }
 
+  async findByEmail(email: string): Promise<Recruter | null> {
+    const recruter = this.recruters.find((item) => item.email === email);
+
+    if (!recruter) {
+      return null;
+    }
+
+    return recruter;
+  }
+
   async save(recruter: Recruter): Promise<void> {
     const recruterIndex = this.recruters.findIndex(
       (item) => item.id === recruter.id,

@@ -20,6 +20,16 @@ export class InMemoryFreelancersRepository implements FreelancersRepository {
     return freelancer;
   }
 
+  async findByEmail(email: string): Promise<Freelancer | null> {
+    const freelancer = this.freelancers.find((item) => item.email === email);
+
+    if (!freelancer) {
+      return null;
+    }
+
+    return freelancer;
+  }
+
   async save(freelancer: Freelancer): Promise<void> {
     const freelancerIndex = this.freelancers.findIndex(
       (item) => item.id === freelancer.id,
