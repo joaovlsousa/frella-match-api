@@ -1,4 +1,5 @@
-import { AuthModule } from '@application/use-cases/auth/auth.module';
+import { AuthModule } from '@infra/auth/auth.module';
+import { DatabaseModule } from '@infra/database/database.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -19,8 +20,7 @@ import { JwtModule } from '@nestjs/jwt';
       }),
     }),
     AuthModule,
+    DatabaseModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

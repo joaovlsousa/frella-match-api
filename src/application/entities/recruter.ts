@@ -1,13 +1,10 @@
 import { generateId } from '@helpers/generate-id';
 import { Replace } from '@helpers/replace';
 
-import { WorkProps } from './work';
-
 export interface RecruterProps {
   name: string;
   email: string;
   imageUrl?: string | null;
-  works?: WorkProps[];
   createdAt: Date;
 }
 
@@ -15,11 +12,13 @@ export class Recruter {
   private _id: string;
   private props: RecruterProps;
 
-  constructor(props: Replace<RecruterProps, { createdAt?: Date }>) {
-    this._id = generateId();
+  constructor(
+    props: Replace<RecruterProps, { createdAt?: Date }>,
+    id?: string,
+  ) {
+    this._id = id ?? generateId();
     this.props = {
       ...props,
-      works: props.works ?? [],
       createdAt: props.createdAt ?? new Date(),
     };
   }
@@ -46,14 +45,6 @@ export class Recruter {
 
   public get imageUrl(): string | null | undefined {
     return this.props.imageUrl;
-  }
-
-  public set works(works: WorkProps[]) {
-    this.props.works = works;
-  }
-
-  public get works(): WorkProps[] {
-    return this.props.works;
   }
 
   public get createdAt(): Date {
