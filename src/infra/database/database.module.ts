@@ -1,23 +1,29 @@
-import { FreelancersRepository } from '@application/repositories/freelancers-repository';
-import { RecrutersRepository } from '@application/repositories/recruters-repository';
+import { SubmissionsRepository } from '@application/repositories/submissions-repository';
+import { UsersRepository } from '@application/repositories/users-repository';
+import { WorksRepository } from '@application/repositories/works-repository';
 import { Module } from '@nestjs/common';
 
 import { PrismaService } from './prisma/prisma.service';
-import { PrismaFreelancersRepository } from './prisma/repositories/prisma-freelancers-repository';
-import { PrismaRecrutersRepository } from './prisma/repositories/prisma-recruters-repository';
+import { PrismaSubmissionsRepository } from './prisma/repositories/prisma-submissions-repository';
+import { PrismaUsersRepository } from './prisma/repositories/prisma-users-repository';
+import { PrismaWorksRepository } from './prisma/repositories/prisma-works-repository';
 
 @Module({
   providers: [
     PrismaService,
     {
-      provide: FreelancersRepository,
-      useClass: PrismaFreelancersRepository,
+      provide: UsersRepository,
+      useClass: PrismaUsersRepository,
     },
     {
-      provide: RecrutersRepository,
-      useClass: PrismaRecrutersRepository,
+      provide: WorksRepository,
+      useClass: PrismaWorksRepository,
+    },
+    {
+      provide: SubmissionsRepository,
+      useClass: PrismaSubmissionsRepository,
     },
   ],
-  exports: [FreelancersRepository],
+  exports: [UsersRepository],
 })
 export class DatabaseModule {}

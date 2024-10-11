@@ -1,21 +1,22 @@
 import { generateId } from '@helpers/generate-id';
 import { Replace } from '@helpers/replace';
 
-export interface RecruterProps {
+export type UserRole = 'RECRUITER' | 'FREELANCER';
+
+export interface UserProps {
   name: string;
   email: string;
   imageUrl?: string | null;
+  password?: string;
+  role: UserRole;
   createdAt: Date;
 }
 
-export class Recruter {
+export class User {
   private _id: string;
-  private props: RecruterProps;
+  private props: UserProps;
 
-  constructor(
-    props: Replace<RecruterProps, { createdAt?: Date }>,
-    id?: string,
-  ) {
+  constructor(props: Replace<UserProps, { createdAt?: Date }>, id?: string) {
     this._id = id ?? generateId();
     this.props = {
       ...props,
@@ -45,6 +46,18 @@ export class Recruter {
 
   public get imageUrl(): string | null | undefined {
     return this.props.imageUrl;
+  }
+
+  public set password(password: string) {
+    this.props.password = password;
+  }
+
+  public get password(): string | undefined {
+    return this.props.password;
+  }
+
+  public get role(): UserRole {
+    return this.props.role;
   }
 
   public get createdAt(): Date {

@@ -2,19 +2,18 @@ import { generateId } from '@helpers/generate-id';
 import { Replace } from '@helpers/replace';
 
 import { Body } from './body';
-import { SubmissionProps } from './submission';
+import { EndsAt } from './ends-at';
 
-type WorkStatus = 'OPEN' | 'CLOSED' | 'FINISHED';
+export type WorkStatus = 'OPEN' | 'CLOSED' | 'FINISHED';
 
 export interface WorkProps {
   title: string;
   description: Body;
-  deliveryTime: Date;
+  endsAt: EndsAt;
   amountCharged: number;
   status?: WorkStatus;
-  recruterId: string;
-  freelancerId: string;
-  submissions?: SubmissionProps[];
+  recruiterId: string;
+  freelancerId?: string | null;
   createdAt: Date;
 }
 
@@ -22,12 +21,11 @@ export class Work {
   private _id: string;
   private props: WorkProps;
 
-  constructor(props: Replace<WorkProps, { createdAt?: Date }>) {
-    this._id = generateId();
+  constructor(props: Replace<WorkProps, { createdAt?: Date }>, id?: string) {
+    this._id = id ?? generateId();
     this.props = {
       ...props,
       status: props.status ?? 'OPEN',
-      submissions: props.submissions ?? [],
       createdAt: props.createdAt ?? new Date(),
     };
   }
@@ -36,16 +34,16 @@ export class Work {
     return this._id;
   }
 
-  public set freelancerId(freelancerId: string) {
+  public set freelancerId(freelancerId: string | null) {
     this.props.freelancerId = freelancerId;
   }
 
-  public get freelancerId(): string {
+  public get freelancerId(): string | null | undefined {
     return this.props.freelancerId;
   }
 
-  public get recruterId(): string {
-    return this.props.recruterId;
+  public get recruiterId(): string {
+    return this.props.recruiterId;
   }
 
   public set description(description: Body) {
@@ -72,12 +70,12 @@ export class Work {
     return this.props.status;
   }
 
-  public set deliveryTime(deliveryTime: Date) {
-    this.props.deliveryTime = deliveryTime;
+  public set endsAt(endsAt: EndsAt) {
+    this.props.endsAt = endsAt;
   }
 
-  public get deliveryTime(): Date {
-    return this.props.deliveryTime;
+  public get endsAt(): EndsAt {
+    return this.props.endsAt;
   }
 
   public set amountCharged(amountCharged: number) {
@@ -86,14 +84,6 @@ export class Work {
 
   public get amountCharged(): number {
     return this.props.amountCharged;
-  }
-
-  public set submissions(submissions: SubmissionProps[]) {
-    this.props.submissions = submissions;
-  }
-
-  public get submissions(): SubmissionProps[] {
-    return this.props.submissions;
   }
 
   public get createdAt(): Date {

@@ -1,5 +1,5 @@
-import { FreelancersRepository } from '@application/repositories/freelancers-repository';
 import { RecrutersRepository } from '@application/repositories/recruters-repository';
+import { FreelancersRepository } from '@application/repositories/users-repository';
 import { UserRole } from '@helpers/user-role';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';

@@ -2,15 +2,16 @@ import { generateId } from '@helpers/generate-id';
 import { Replace } from '@helpers/replace';
 
 import { Body } from './body';
+import { EndsAt } from './ends-at';
 
 export interface SubmissionProps {
-  freelancerId: string;
-  workId: string;
   body: Body;
   portfolioLink?: string | null;
   linkedinLink?: string | null;
-  deliveryTime: Date;
+  deliveryTime: EndsAt;
   amountCharged: number;
+  freelancerId: string;
+  workId: string;
   createdAt: Date;
 }
 
@@ -18,8 +19,11 @@ export class Submission {
   private _id: string;
   private props: SubmissionProps;
 
-  constructor(props: Replace<SubmissionProps, { createdAt?: Date }>) {
-    this._id = generateId();
+  constructor(
+    props: Replace<SubmissionProps, { createdAt?: Date }>,
+    id?: string,
+  ) {
+    this._id = id ?? generateId();
     this.props = {
       ...props,
       createdAt: props.createdAt ?? new Date(),
@@ -62,11 +66,11 @@ export class Submission {
     return this.props.linkedinLink;
   }
 
-  public set deliveryTime(deliveryTime: Date) {
+  public set deliveryTime(deliveryTime: EndsAt) {
     this.props.deliveryTime = deliveryTime;
   }
 
-  public get deliveryTime(): Date {
+  public get deliveryTime(): EndsAt {
     return this.props.deliveryTime;
   }
 

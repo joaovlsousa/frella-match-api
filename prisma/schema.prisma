@@ -7,70 +7,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Freelancer {
-  id       String  @id
+model User {
+  id       String   @id
   name     String
-  email    String  @unique
-  imageUrl String? @map("image_url")
+  email    String   @unique
+  imageUrl String?  @map("image_url")
+  password String?
+  role     UserRole
 
-  submissions Submission[]
-  works       Work[]
+  submissions     Submission[]
+  freelancerWorks Work[]       @relation("freelancer_relation")
+  worksOwner      Work[]       @relation("recruiter_relation")
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  @@map("freelancers")
-}
-
-model Recruter {
-  id       String  @id
-  name     String
-  email    String  @unique
-  imageUrl String? @map("image_url")
-
-  works Work[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@map("recruters")
+  @@map("users")
 }
 
 model Work {
   id            String     @id
   title         String
   description   String
-  deliveryTime  DateTime?  @map("delivery_time")
+  endsAt        DateTime   @map("ends_at")
   amountCharged Float      @map("amount_charged")
   status        WorkStatus
 
-  recruterId   String       @map("owner_id")
+  recruiterId  String       @map("recruiter_id")
   freelancerId String?      @map("freelancer_id")
   submissions  Submission[]
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  recruter   Recruter    @relation(fields: [recruterId], references: [id], onDelete: Cascade)
-  freelancer Freelancer? @relation(fields: [freelancerId], references: [id], onDelete: Cascade)
+  recruiter  User  @relation("recruiter_relation", fields: [recruiterId], references: [id], onDelete: Cascade)
+  freelancer User? @relation("freelancer_relation", fields: [freelancerId], references: [id], onDelete: Cascade)
 
   @@map("works")
 }
 
 model Submission {
-  id           String @id
-  freelancerId String @map("freelancer_id")
-  workId       String @map("work_id")
-
+  id            String   @id
   body          String
   portfolioLink String?  @map("portfolio_link")
   linkedinLink  String?  @map("linkedin_link")
   deliveryTime  DateTime @map("delivery_time")
   amountCharged Float    @map("amount_charged")
 
+  freelancerId String @map("freelancer_id")
+  workId       String @map("work_id")
+
   createdAt DateTime @default(now()) @map("created_at")
 
-  freelancer Freelancer @relation(fields: [freelancerId], references: [id], onDelete: Cascade)
-  work       Work       @relation(fields: [workId], references: [id], onDelete: Cascade)
+  freelancer User @relation(fields: [freelancerId], references: [id], onDelete: Cascade)
+  work       Work @relation(fields: [workId], references: [id], onDelete: Cascade)
 
   @@map("submissions")
+}
+
+enum UserRole {
+  RECRUITER
+  FREELANCER
 }
 
 enum WorkStatus {
